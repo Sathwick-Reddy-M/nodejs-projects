@@ -1,7 +1,9 @@
 const { parse } = require("csv-parse");
 const fs = require("fs");
+const { writeFile } = require("fs/promises");
 
-const info_obj = {};
+const relevantDataObj = {};
+const writeFilePath = "./relevantData.json";
 
 const updateRelevantData = (data) => {
   const {
@@ -13,8 +15,8 @@ const updateRelevantData = (data) => {
     danceability,
   } = data;
 
-  if (!info_obj.hasOwnProperty(track_artist)) {
-    info_obj[track_artist] = {
+  if (!relevantDataObj.hasOwnProperty(track_artist)) {
+    relevantDataObj[track_artist] = {
       totalTracks: 1,
       albums: [track_album_name],
       topTrack: track_name,
@@ -28,7 +30,7 @@ const updateRelevantData = (data) => {
     return;
   }
 
-  const artistObj = info_obj[track_artist];
+  const artistObj = relevantDataObj[track_artist];
   artistObj["totalTracks"] += 1;
   if (
     !artistObj["albums"].find((album) => {
@@ -54,6 +56,15 @@ const updateRelevantData = (data) => {
   }
 };
 
+async function exportInformation(relevantDataObj) {
+  try {
+    await writeFile(writeFilePath, JSON.stringify(relevantDataObj));
+    console.log(`Exported data to ${writeFilePath}`);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 fs.createReadStream("./archive/spotify_songs.csv")
   .pipe(
     parse({
@@ -68,6 +79,7 @@ fs.createReadStream("./archive/spotify_songs.csv")
   .on("error", (error) => {
     console.log(error);
   })
-  .on("end", () => {
-    console.log("Done");
+  .on("end", async () => {
+    await exportInformation(relevantDataObj);
+    console.log("done extracting and exporting the relevant information");
   });
