@@ -3,6 +3,10 @@ const songsDataAnalysisController = require("../controllers/songsDataAnalysis.co
 
 const songsDataAnalysisRouter = express.Router();
 
-songsDataAnalysisRouter.get("/", songsDataAnalysisController.getSongsInfoFile);
+songsDataAnalysisRouter.get("/", songsDataAnalysisController.getSongsInfo);
+songsDataAnalysisRouter.post(
+  "/",
+  songsDataAnalysisController.downloadSongsInfoFile
+);
 
 module.exports = songsDataAnalysisRouter;

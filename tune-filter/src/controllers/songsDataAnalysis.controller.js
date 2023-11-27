@@ -68,7 +68,8 @@ async function exportInformation(relevantDataObj) {
   }
 }
 
-const getSongsInfoFile = (req, res) => {
+const downloadSongsInfoFile = (req, res) => {
+  console.log("post req");
   fs.createReadStream(
     path.join(__dirname, "..", "..", "archive", "spotify_songs.csv")
   )
@@ -92,6 +93,31 @@ const getSongsInfoFile = (req, res) => {
     });
 };
 
-songsDataAnalysisController.getSongsInfoFile = getSongsInfoFile;
+const getSongsInfo = (req, res) => {
+  fs.createReadStream(
+    path.join(__dirname, "..", "..", "archive", "spotify_songs.csv")
+  )
+    .pipe(
+      parse({
+        comment: "#",
+        columns: true,
+        skip_records_with_error: true,
+      })
+    )
+    .on("data", (data) => {
+      updateRelevantData(data);
+    })
+    .on("error", (error) => {
+      console.log(error);
+    })
+    .on("end", async () => {
+      await exportInformation(relevantDataObj);
+      console.log("done extracting and exporting the relevant information");
+      res.sendFile(path.join(__dirname, "..", "..", "relevantData.json"));
+    });
+};
+
+songsDataAnalysisController.downloadSongsInfoFile = downloadSongsInfoFile;
+songsDataAnalysisController.getSongsInfo = getSongsInfo;
 
 module.exports = songsDataAnalysisController;
