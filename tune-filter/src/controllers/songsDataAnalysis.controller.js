@@ -1,9 +1,12 @@
 const { parse } = require("csv-parse");
 const fs = require("fs");
 const { writeFile } = require("fs/promises");
+const path = require("path");
+
+songsDataAnalysisController = {};
 
 const relevantDataObj = {};
-const writeFilePath = "../relevantData.json";
+const writeFilePath = path.join(__dirname, "..", "..", "relevantData.json");
 
 const updateRelevantData = (data) => {
   const {
@@ -65,21 +68,30 @@ async function exportInformation(relevantDataObj) {
   }
 }
 
-fs.createReadStream("../archive/spotify_songs.csv")
-  .pipe(
-    parse({
-      comment: "#",
-      columns: true,
-      skip_records_with_error: true,
-    })
+const getSongsInfoFile = (req, res) => {
+  fs.createReadStream(
+    path.join(__dirname, "..", "..", "archive", "spotify_songs.csv")
   )
-  .on("data", (data) => {
-    updateRelevantData(data);
-  })
-  .on("error", (error) => {
-    console.log(error);
-  })
-  .on("end", async () => {
-    await exportInformation(relevantDataObj);
-    console.log("done extracting and exporting the relevant information");
-  });
+    .pipe(
+      parse({
+        comment: "#",
+        columns: true,
+        skip_records_with_error: true,
+      })
+    )
+    .on("data", (data) => {
+      updateRelevantData(data);
+    })
+    .on("error", (error) => {
+      console.log(error);
+    })
+    .on("end", async () => {
+      await exportInformation(relevantDataObj);
+      console.log("done extracting and exporting the relevant information");
+      res.download(path.join(__dirname, "..", "..", "relevantData.json"));
+    });
+};
+
+songsDataAnalysisController.getSongsInfoFile = getSongsInfoFile;
+
+module.exports = songsDataAnalysisController;
