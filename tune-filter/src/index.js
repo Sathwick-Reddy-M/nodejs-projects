@@ -3,7 +3,7 @@ const fs = require("fs");
 const { writeFile } = require("fs/promises");
 
 const relevantDataObj = {};
-const writeFilePath = "./relevantData.json";
+const writeFilePath = "../relevantData.json";
 
 const updateRelevantData = (data) => {
   const {
@@ -65,7 +65,7 @@ async function exportInformation(relevantDataObj) {
   }
 }
 
-fs.createReadStream("./archive/spotify_songs.csv")
+fs.createReadStream("../archive/spotify_songs.csv")
   .pipe(
     parse({
       comment: "#",
