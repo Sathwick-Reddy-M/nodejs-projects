@@ -33,24 +33,35 @@ const getSongsByArtist = (req, res) => {
       console.log(error);
     })
     .on("end", () => {
-      res.json(songs);
+      res.render(
+        path.join(__dirname, "..", "..", "views", "pages", "artistSongs"),
+        {
+          songs,
+          artist,
+        }
+      );
     });
 };
 
 artistDetailsController.getSongsByArtist = getSongsByArtist;
 
-const updatePlaylists = (data, artistName, playlists) => {
+const updatePlaylists = (data, artistName, playlists, uniquePlaylistNames) => {
   const { track_artist, playlist_name, playlist_genre, playlist_subgenre } =
     data;
 
-  if (track_artist.toLowerCase() == artistName) {
+  if (
+    track_artist.toLowerCase() == artistName &&
+    !uniquePlaylistNames.includes(playlist_name)
+  ) {
     playlists.push({ playlist_name, playlist_genre, playlist_subgenre });
+    uniquePlaylistNames.push(playlist_name);
   }
 };
 
 const getPlaylistsByArtist = (req, res) => {
   const artist = req.params.artist;
   const playlists = [];
+  const uniquePlaylistNames = [];
 
   fs.createReadStream(
     path.join(__dirname, "..", "..", "archive", "spotify_songs.csv")
@@ -63,13 +74,24 @@ const getPlaylistsByArtist = (req, res) => {
       })
     )
     .on("data", (data) => {
-      updatePlaylists(data, artist.toLowerCase(), playlists);
+      updatePlaylists(
+        data,
+        artist.toLowerCase(),
+        playlists,
+        uniquePlaylistNames
+      );
     })
     .on("error", (error) => {
       console.log(error);
     })
     .on("end", () => {
-      res.json(playlists);
+      res.render(
+        path.join(__dirname, "..", "..", "views", "pages", "artistPlaylists"),
+        {
+          playlists,
+          artist,
+        }
+      );
     });
 };
 
@@ -104,7 +126,13 @@ const getAlbumsByArtist = (req, res) => {
       console.log(error);
     })
     .on("end", () => {
-      res.json(albums);
+      res.render(
+        path.join(__dirname, "..", "..", "views", "pages", "artistAlbums"),
+        {
+          albums,
+          artist,
+        }
+      );
     });
 };
 

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Artist Playlists</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Playlists of <%= artist %></h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Playlist Name</th>
+          <th>Playlist Genre</th>
+          <th>Playlist Sub Genre</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% playlists.forEach((data) => { %>
+        <tr>
+          <td><%= data.playlist_name %></td>
+          <td><%= data.playlist_genre %></td>
+          <td><%= data.playlist_subgenre %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </body>
+</html>

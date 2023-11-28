@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Songs Data Analysis</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Songs Data Analysis</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Artist</th>
+          <th>Total Tracks</th>
+          <th>Top Track</th>
+          <th>Top Track Album</th>
+          <th>Highest Popularity</th>
+          <th>Latest Album Release</th>
+          <th>Latest Album</th>
+          <th>Most Danceable Track</th>
+          <th>Highest Danceability</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Object.entries(relevantDataObj).forEach(([artist, data]) => { %>
+        <tr>
+          <td><%= artist %></td>
+          <td><%= data.totalTracks %></td>
+          <td><%= data.topTrack %></td>
+          <td><%= data.topTrackAlbum %></td>
+          <td><%= data.highestTrackPopularity %></td>
+          <td><%= data.latestAlbumRelease %></td>
+          <td><%= data.latestAlbum %></td>
+          <td><%= data.mostDancableTrack %></td>
+          <td><%= data.highestTrackDancability %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </body>
+</html>

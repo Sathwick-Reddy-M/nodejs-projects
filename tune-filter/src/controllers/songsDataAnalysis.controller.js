@@ -113,7 +113,12 @@ const getSongsInfo = (req, res) => {
     .on("end", async () => {
       await exportInformation(relevantDataObj);
       console.log("done extracting and exporting the relevant information");
-      res.sendFile(path.join(__dirname, "..", "..", "relevantData.json"));
+      res.render(
+        path.join(__dirname, "..", "..", "views", "pages", "songsDataAnalysis"),
+        {
+          relevantDataObj,
+        }
+      );
     });
 };
 
