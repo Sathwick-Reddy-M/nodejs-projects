@@ -8,4 +8,14 @@ artistDetailsRouter.get(
   artistDetailsController.getSongsByArtist
 );
 
+artistDetailsRouter.get(
+  "/playlists/:artist",
+  artistDetailsController.getPlaylistsByArtist
+);
+
+artistDetailsRouter.get(
+  "/albums/:artist",
+  artistDetailsController.getAlbumsByArtist
+);
+
 module.exports = artistDetailsRouter;
