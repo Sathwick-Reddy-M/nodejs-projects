@@ -2,10 +2,82 @@
 <html lang="en">
   <head>
     <%- include("../partials/head") %>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      h1 {
+        color: #333;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li {
+        margin-bottom: 10px;
+      }
+      form {
+        margin-top: 20px;
+      }
+      button {
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
-    <form action="/songsDataAnalysis" method="post">
-      <button type="submit">Download songs analysis information</button>
-    </form>
+    <h1>Welcome to the Songs API</h1>
+
+    <h2>Endpoints:</h2>
+    <ul>
+      <li>
+        <strong>/</strong> - Home Page
+        <p>Displays a list of available endpoints and their descriptions.</p>
+      </li>
+      <li>
+        <strong>/songsDataAnalysis</strong> - Songs Data Analysis
+        <p><strong>GET: </strong> Displays songs data analysis information</p>
+        <p>
+          <strong>POST: </strong> Download the song data analysis JSON file.
+        </p>
+        <form action="/songsDataAnalysis" method="post">
+          <button type="submit">
+            Download songs analysis information(POST)
+          </button>
+        </form>
+      </li>
+      <li>
+        <strong>/songs/:artist</strong> - Get Songs by Artist
+        <p>
+          Displays songs by a specific artist. Replace ":artist" with the
+          desired artist's name.
+        </p>
+      </li>
+      <li>
+        <strong>/playlists/:artist</strong> - Get Playlists by Artist
+        <p>
+          Displays playlists by a specific artist. Replace ":artist" with the
+          desired artist's name.
+        </p>
+      </li>
+      <li>
+        <strong>/albums/:artist</strong> - Get Albums by Artist
+        <p>
+          Displays albums by a specific artist. Replace ":artist" with the
+          desired artist's name.
+        </p>
+      </li>
+    </ul>
+
+    <h2>Available Artist Names:</h2>
+    <ul>
+      <% artists.forEach(artist => { %>
+      <li><%= artist %></li>
+      <% }); %>
+    </ul>
   </body>
 </html>
