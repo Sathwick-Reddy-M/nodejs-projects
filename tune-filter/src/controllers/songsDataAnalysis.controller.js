@@ -1,14 +1,13 @@
-const { parse } = require("csv-parse");
-const fs = require("fs");
 const { writeFile } = require("fs/promises");
 const path = require("path");
+const songsModel = require("../models/songs.models");
 
 songsDataAnalysisController = {};
 
 const relevantDataObj = {};
 const writeFilePath = path.join(__dirname, "..", "..", "relevantData.json");
 
-const updateRelevantData = (data) => {
+const updateRelevantData = (data, relevantDataObj) => {
   const {
     track_artist,
     track_name,
@@ -69,56 +68,31 @@ async function exportInformation(relevantDataObj) {
 }
 
 const downloadSongsInfoFile = (req, res) => {
-  console.log("post req");
-  fs.createReadStream(
-    path.join(__dirname, "..", "..", "archive", "spotify_songs.csv")
-  )
-    .pipe(
-      parse({
-        comment: "#",
-        columns: true,
-        skip_records_with_error: true,
-      })
-    )
-    .on("data", (data) => {
-      updateRelevantData(data);
-    })
-    .on("error", (error) => {
-      console.log(error);
-    })
-    .on("end", async () => {
+  songsModel
+    .getDataFromCSV(updateRelevantData, relevantDataObj)
+    .then(async () => {
       await exportInformation(relevantDataObj);
       console.log("done extracting and exporting the relevant information");
       res.download(path.join(__dirname, "..", "..", "relevantData.json"));
+    })
+    .catch((error) => {
+      res.status(404).send(error);
     });
 };
 
 const getSongsInfo = (req, res) => {
-  fs.createReadStream(
-    path.join(__dirname, "..", "..", "archive", "spotify_songs.csv")
-  )
-    .pipe(
-      parse({
-        comment: "#",
-        columns: true,
-        skip_records_with_error: true,
-      })
-    )
-    .on("data", (data) => {
-      updateRelevantData(data);
-    })
-    .on("error", (error) => {
-      console.log(error);
-    })
-    .on("end", async () => {
-      await exportInformation(relevantDataObj);
-      console.log("done extracting and exporting the relevant information");
+  songsModel
+    .getDataFromCSV(updateRelevantData, relevantDataObj)
+    .then(() => {
       res.render(
         path.join(__dirname, "..", "..", "views", "pages", "songsDataAnalysis"),
         {
           relevantDataObj,
         }
       );
+    })
+    .catch((error) => {
+      res.status(404).send(error);
     });
 };
 
